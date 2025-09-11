@@ -7,7 +7,7 @@
     <div v-else>
       <h3>Tu jugador de fútbol: {{ rol }}</h3>
     </div>
-    <button @click="iniciarVotacion">Iniciar votación</button>
+  <!-- Botón de iniciar votación eliminado -->
     <div v-if="expulsado">Expulsado: {{ expulsado }}</div>
     <div v-if="nadieExpulsado">Nadie fue expulsado</div>
     <div v-if="fin">{{ fin }}</div>
@@ -24,9 +24,7 @@ const expulsado = ref('');
 const nadieExpulsado = ref(false);
 const fin = ref('');
 
-function iniciarVotacion() {
-  socket.emit('iniciarVotacion', props.salaId);
-}
+// Función de iniciar votación eliminada
 socket.on('rolAsignado', ({ rol: r }) => {
   rol.value = r;
 });
