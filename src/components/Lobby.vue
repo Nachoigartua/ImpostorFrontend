@@ -51,7 +51,4 @@ socket.on('partidaIniciada', () => {
 </script>
 
 <style scoped>
-.lobby { max-width: 400px; margin: auto; padding: 2em; }
-ul { list-style: none; padding: 0; }
-li { margin: 0.5em 0; }
 </style>

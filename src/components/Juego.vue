@@ -45,5 +45,4 @@ socket.on('finPartida', (msg) => {
 </script>
 
 <style scoped>
-.juego { max-width: 400px; margin: auto; padding: 2em; }
 </style>

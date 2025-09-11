@@ -40,8 +40,4 @@ function unirseSala() {
 </script>
 
 <style scoped>
-.inicio { max-width: 400px; margin: auto; padding: 2em; }
-input { display: block; margin: 1em 0; width: 100%; }
-button { margin-right: 1em; }
-.error { color: red; margin-top: 1em; }
 </style>
