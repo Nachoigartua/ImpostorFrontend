@@ -2,7 +2,7 @@
   <div>
     <Inicio v-if="fase === 'inicio'" @salaCreada="onSalaCreada" @salaUnida="onSalaUnida" />
     <Lobby v-if="fase === 'lobby'" :salaId="salaId" :jugadores="jugadores" :host="host" :miId="miId" @partidaIniciada="onPartidaIniciada" />
-    <Juego v-if="fase === 'juego'" :salaId="salaId" />
+    <Juego v-if="fase === 'juego'" :salaId="salaId" :jugadores="jugadores" :host="host" :miId="miId" />
     <Votacion v-if="fase === 'votacion'" :salaId="salaId" :jugadores="jugadoresVivos" />
   </div>
 </template>
@@ -39,13 +39,22 @@ socket.on('actualizarLobby', ({ jugadores: js, host: h }) => {
   jugadores.value = js;
   host.value = h;
 });
-socket.on('partidaIniciada', () => {
+socket.on('partidaIniciada', ({ jugadores: js }) => {
+  if (js) {
+    jugadores.value = js;
+  }
   fase.value = 'juego';
 });
 socket.on('faseVotacion', (js) => {
   jugadoresVivos.value = js;
   fase.value = 'votacion';
 });
+socket.on('jugadoresOrdenados', ({ jugadores: js }) => {
+  if (js) {
+    jugadores.value = js;
+  }
+});
+
 socket.on('finPartida', () => {
   fase.value = 'inicio';
   salaId.value = '';

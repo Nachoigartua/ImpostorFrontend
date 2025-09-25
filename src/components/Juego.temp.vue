@@ -12,13 +12,14 @@
       <h4>Orden:</h4>
       <div class="jugadores-header">
         <div class="jugadores-title">
+          <span v-if="jugadores.length > 0">{{ jugadores.length }} Este es el orden actual:</span>
           <button v-if="esHost" @click="sortearJugadores" class="sort-button">
             Sortear orden
           </button>
         </div>
       </div>
       <ul class="jugadores-ul">
-        <li v-for="jugador in props.jugadores" :key="jugador.id" class="jugador-item">
+        <li v-for="jugador in jugadores" :key="jugador.id" class="jugador-item">
           {{ jugador.nombre }}
         </li>
       </ul>
@@ -34,13 +35,16 @@
 import { ref, computed } from 'vue';
 import socket from '../socket';
 
-const props = defineProps(['salaId', 'jugadores', 'host', 'miId']);
+const props = defineProps(['salaId']);
 const rol = ref(null);
 const expulsado = ref('');
 const nadieExpulsado = ref(false);
 const fin = ref('');
+const jugadores = ref([]);
+const miId = ref(socket.id);
+const host = ref('');
 
-const esHost = computed(() => props.miId === props.host);
+const esHost = computed(() => miId.value === host.value);
 
 function sortearJugadores() {
   socket.emit('sortearJugadores', props.salaId);
@@ -49,6 +53,23 @@ function sortearJugadores() {
 // Escuchamos los eventos del socket
 socket.on('rolAsignado', ({ rol: r }) => {
   rol.value = r;
+});
+
+socket.on('partidaIniciada', ({ jugadores: js }) => {
+  if (js) {
+    jugadores.value = js;
+  }
+});
+
+socket.on('actualizarLobby', ({ jugadores: js, host: h }) => {
+  if (js) jugadores.value = js;
+  if (h) host.value = h;
+});
+
+socket.on('jugadoresOrdenados', ({ jugadores: js }) => {
+  if (js) {
+    jugadores.value = js;
+  }
 });
 
 socket.on('jugadorExpulsado', (id) => {
@@ -140,15 +161,6 @@ socket.emit('obtenerEstadoSala', props.salaId);
 .jugador-item:hover {
   background: rgba(255,255,255,0.1);
   transform: translateX(2px);
-}
-
-.empty-list {
-  text-align: center;
-  padding: 2em;
-  color: rgba(255, 255, 255, 0.6);
-  font-style: italic;
-  background: rgba(255,255,255,0.03);
-  border-radius: 8px;
 }
 
 .estado {
